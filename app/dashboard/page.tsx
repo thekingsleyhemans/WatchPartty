@@ -59,9 +59,16 @@ export default async function DashboardPage() {
                   <p className="font-medium">{room.platform.toUpperCase()} room</p>
                   <p className="text-slate-500">{room.id}</p>
                 </div>
-                <Link href={`/room/${room.id}`} className="btn btn-outline">
-                  Open
-                </Link>
+                <div className="flex items-center gap-2">
+                  <Link href={`/room/${room.id}`} className="btn btn-outline">
+                    Open
+                  </Link>
+                  <form action={`/api/rooms/${room.id}/end`} method="post">
+                    <button type="submit" className="btn border border-red-200 bg-red-50 text-red-700 hover:bg-red-100">
+                      End
+                    </button>
+                  </form>
+                </div>
               </li>
             ))
           ) : (
