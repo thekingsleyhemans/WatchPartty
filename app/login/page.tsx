@@ -10,6 +10,7 @@ export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -35,13 +36,26 @@ export default function LoginPage() {
       <h1 className="text-2xl font-semibold">Log in</h1>
       <form onSubmit={onSubmit} className="mt-4 grid gap-3">
         <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
+
+        <div className="relative">
+          <input
+            type={showPassword ? "text" : "password"}
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full pr-12"
+            required
+          />
+          <button
+            type="button"
+            className="btn btn-ghost absolute right-1 top-1/2 -translate-y-1/2 px-2 py-1 text-sm"
+            onClick={() => setShowPassword((v) => !v)}
+            aria-label={showPassword ? "Hide password" : "Show password"}
+          >
+            {showPassword ? "??" : "??"}
+          </button>
+        </div>
+
         <div className="text-right">
           <Link className="text-sm text-accent" href="/forgot-password">
             Forgot password?

@@ -10,6 +10,8 @@ export default function ResetPasswordPage() {
   const router = useRouter();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [status, setStatus] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -67,20 +69,44 @@ export default function ResetPasswordPage() {
         </p>
       ) : (
         <form onSubmit={onSubmit} className="mt-4 grid gap-3">
-          <input
-            type="password"
-            placeholder="New password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          <input
-            type="password"
-            placeholder="Confirm new password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
-          />
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="New password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full pr-12"
+              required
+            />
+            <button
+              type="button"
+              className="btn btn-ghost absolute right-1 top-1/2 -translate-y-1/2 px-2 py-1 text-sm"
+              onClick={() => setShowPassword((v) => !v)}
+              aria-label={showPassword ? "Hide password" : "Show password"}
+            >
+              {showPassword ? "??" : "??"}
+            </button>
+          </div>
+
+          <div className="relative">
+            <input
+              type={showConfirmPassword ? "text" : "password"}
+              placeholder="Confirm new password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className="w-full pr-12"
+              required
+            />
+            <button
+              type="button"
+              className="btn btn-ghost absolute right-1 top-1/2 -translate-y-1/2 px-2 py-1 text-sm"
+              onClick={() => setShowConfirmPassword((v) => !v)}
+              aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+            >
+              {showConfirmPassword ? "??" : "??"}
+            </button>
+          </div>
+
           {error ? <p className="text-sm text-red-600">{error}</p> : null}
           {status ? <p className="text-sm text-emerald-700">{status}</p> : null}
           <button type="submit" disabled={loading} className="btn btn-primary disabled:opacity-70">

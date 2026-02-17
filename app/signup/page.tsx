@@ -10,6 +10,7 @@ export default function SignupPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -43,14 +44,27 @@ export default function SignupPage() {
       <h1 className="text-2xl font-semibold">Sign up</h1>
       <form onSubmit={onSubmit} className="mt-4 grid gap-3">
         <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        <input
-          type="password"
-          minLength={6}
-          placeholder="Password (min 6 chars)"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
+
+        <div className="relative">
+          <input
+            type={showPassword ? "text" : "password"}
+            minLength={6}
+            placeholder="Password (min 6 chars)"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full pr-12"
+            required
+          />
+          <button
+            type="button"
+            className="btn btn-ghost absolute right-1 top-1/2 -translate-y-1/2 px-2 py-1 text-sm"
+            onClick={() => setShowPassword((v) => !v)}
+            aria-label={showPassword ? "Hide password" : "Show password"}
+          >
+            {showPassword ? "??" : "??"}
+          </button>
+        </div>
+
         {error ? <p className="text-sm text-red-600">{error}</p> : null}
         {info ? <p className="text-sm text-emerald-700">{info}</p> : null}
         <button type="submit" disabled={loading} className="btn btn-primary disabled:opacity-70">
