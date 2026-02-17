@@ -5,6 +5,25 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createBrowserSupabaseClient } from "@/lib/supabase/client";
 
+function EyeIcon({ open }: { open: boolean }) {
+  if (open) {
+    return (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5 transition-all duration-200">
+        <path d="M2 12s3.5-6.5 10-6.5S22 12 22 12s-3.5 6.5-10 6.5S2 12 2 12Z" />
+        <circle cx="12" cy="12" r="2.8" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5 transition-all duration-200">
+      <path d="M2 12s3.5-6.5 10-6.5S22 12 22 12s-3.5 6.5-10 6.5S2 12 2 12Z" />
+      <circle cx="12" cy="12" r="2.8" />
+      <path d="M4 4 20 20" />
+    </svg>
+  );
+}
+
 export default function SignupPage() {
   const supabase = createBrowserSupabaseClient();
   const router = useRouter();
@@ -57,11 +76,13 @@ export default function SignupPage() {
           />
           <button
             type="button"
-            className="btn btn-ghost absolute right-1 top-1/2 -translate-y-1/2 px-2 py-1 text-sm"
+            className="btn btn-ghost absolute right-1 top-1/2 -translate-y-1/2 px-2 py-1 text-slate-600 hover:text-slate-900"
             onClick={() => setShowPassword((v) => !v)}
             aria-label={showPassword ? "Hide password" : "Show password"}
           >
-            {showPassword ? "??" : "??"}
+            <span className="block transition-transform duration-200 ease-out active:scale-95">
+              <EyeIcon open={showPassword} />
+            </span>
           </button>
         </div>
 
