@@ -7,9 +7,9 @@ export default async function HomePage() {
   return (
     <section className="grid gap-6 rounded-2xl border border-slate-200 bg-white p-8">
       <p className="text-sm uppercase tracking-widest text-slate-500">Watch together</p>
-      <h1 className="text-4xl font-semibold tracking-tight">YouTube + Netflix watch rooms that stay in sync.</h1>
+      <h1 className="text-4xl font-semibold tracking-tight">WATCH PARRRTYYY</h1>
       <p className="max-w-2xl text-slate-600">
-        Create a room, invite friends, chat live, and keep playback aligned. YouTube works in-app. Netflix sync works through the WatchParrty Chrome extension.
+        I created this small so we can have watch parties with no stress..hopefully
       </p>
       <div className="flex flex-wrap gap-3">
         <Link href={user ? "/create-room" : "/signup"} className="btn btn-primary">
