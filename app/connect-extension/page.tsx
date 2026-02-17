@@ -36,7 +36,7 @@ export default function ConnectExtensionPage() {
     chromeApi.runtime.sendMessage(extensionId, {
       type: "WATCHPARRTY_SET_AUTH",
       payload
-    }, (response) => {
+    }, (response: { ok?: boolean } | undefined) => {
       if (chromeApi.runtime.lastError) {
         setStatus("Message to extension failed. Token copied as fallback.");
       } else {
