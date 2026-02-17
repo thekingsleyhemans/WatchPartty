@@ -20,7 +20,12 @@ export default function SignupPage() {
     setError(null);
     setInfo(null);
 
-    const { error } = await supabase.auth.signUp({ email, password });
+    const emailRedirectTo = `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback?next=/dashboard`;
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { emailRedirectTo }
+    });
     setLoading(false);
 
     if (error) {
@@ -28,7 +33,7 @@ export default function SignupPage() {
       return;
     }
 
-    setInfo("Account created. If email confirmation is enabled, verify first. Then log in.");
+    setInfo("Account created. Check your email to verify your account.");
     router.push("/login");
     router.refresh();
   };
@@ -48,7 +53,7 @@ export default function SignupPage() {
         />
         {error ? <p className="text-sm text-red-600">{error}</p> : null}
         {info ? <p className="text-sm text-emerald-700">{info}</p> : null}
-        <button type="submit" disabled={loading} className="bg-slate-900 text-white disabled:opacity-70">
+        <button type="submit" disabled={loading} className="btn btn-primary disabled:opacity-70">
           {loading ? "Creating..." : "Create account"}
         </button>
       </form>
