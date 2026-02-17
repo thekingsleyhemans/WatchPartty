@@ -12,10 +12,10 @@ export default async function HomePage() {
         Create a room, invite friends, chat live, and keep playback aligned. YouTube works in-app. Netflix sync works through the WatchParrty Chrome extension.
       </p>
       <div className="flex flex-wrap gap-3">
-        <Link href={user ? "/create-room" : "/signup"} className="bg-slate-900 text-white">
+        <Link href={user ? "/create-room" : "/signup"} className="btn btn-primary">
           Create Room
         </Link>
-        <Link href="/connect-extension" className="border border-slate-300 bg-white">
+        <Link href="/connect-extension" className="btn btn-outline">
           Connect Extension
         </Link>
       </div>

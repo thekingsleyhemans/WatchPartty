@@ -1,7 +1,10 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import UsernameForm from "@/components/dashboard/UsernameForm";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { Room } from "@/lib/types";
+
+type MembershipRow = { room_id: string };
 
 export default async function DashboardPage() {
   const supabase = await createServerSupabaseClient();
@@ -18,7 +21,7 @@ export default async function DashboardPage() {
     .order("joined_at", { ascending: false })
     .limit(20);
 
-  const roomIds = memberships?.map((m) => m.room_id) ?? [];
+  const roomIds = ((memberships as MembershipRow[] | null) ?? []).map((m) => m.room_id);
   let rooms: Room[] = [];
 
   if (roomIds.length) {
@@ -30,6 +33,8 @@ export default async function DashboardPage() {
     rooms = (data as Room[]) ?? [];
   }
 
+  const initialUsername = (user.user_metadata?.username as string | undefined) ?? "";
+
   return (
     <section className="grid gap-4">
       <div className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white p-5">
@@ -37,10 +42,12 @@ export default async function DashboardPage() {
           <h1 className="text-2xl font-semibold">Dashboard</h1>
           <p className="text-sm text-slate-600">Create a room or rejoin one of your recent rooms.</p>
         </div>
-        <Link href="/create-room" className="bg-slate-900 text-white">
+        <Link href="/create-room" className="btn btn-primary">
           Create Room
         </Link>
       </div>
+
+      <UsernameForm initialUsername={initialUsername} />
 
       <div className="rounded-2xl border border-slate-200 bg-white p-5">
         <h2 className="text-lg font-semibold">Recent Rooms</h2>
@@ -52,7 +59,7 @@ export default async function DashboardPage() {
                   <p className="font-medium">{room.platform.toUpperCase()} room</p>
                   <p className="text-slate-500">{room.id}</p>
                 </div>
-                <Link href={`/room/${room.id}`} className="border border-slate-300 bg-white">
+                <Link href={`/room/${room.id}`} className="btn btn-outline">
                   Open
                 </Link>
               </li>

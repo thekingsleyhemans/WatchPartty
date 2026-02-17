@@ -19,3 +19,19 @@ select {
 button {
   @apply rounded-lg px-4 py-2 transition-all duration-150 ease-out active:scale-[0.98] hover:brightness-95;
 }
+
+.btn {
+  @apply inline-flex items-center justify-center rounded-lg px-4 py-2 transition-all duration-150 ease-out active:scale-[0.98];
+}
+
+.btn-primary {
+  @apply bg-slate-900 text-white hover:brightness-95;
+}
+
+.btn-outline {
+  @apply border border-slate-300 bg-white hover:bg-slate-100;
+}
+
+.btn-ghost {
+  @apply hover:bg-slate-100;
+}

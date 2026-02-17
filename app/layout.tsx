@@ -29,24 +29,24 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <nav className="flex items-center gap-4 px-1 text-sm">
               {user ? (
                 <>
-                  <Link href="/dashboard" className="rounded-md px-3 py-1.5 hover:bg-slate-100">
+                  <Link href="/dashboard" className="btn btn-ghost">
                     Dashboard
                   </Link>
-                  <Link href="/connect-extension" className="rounded-md px-3 py-1.5 hover:bg-slate-100">
+                  <Link href="/connect-extension" className="btn btn-ghost">
                     Connect Extension
                   </Link>
                   <form action="/logout" method="post">
-                    <button type="submit" className="bg-slate-900 text-white">
+                    <button type="submit" className="btn btn-primary">
                       Log out
                     </button>
                   </form>
                 </>
               ) : (
                 <>
-                  <Link href="/login" className="rounded-md border border-slate-200 px-4 py-2 hover:bg-slate-100">
+                  <Link href="/login" className="btn btn-outline">
                     Log in
                   </Link>
-                  <Link href="/signup" className="rounded-md bg-slate-900 px-4 py-2 text-white">
+                  <Link href="/signup" className="btn btn-primary">
                     Sign up
                   </Link>
                 </>

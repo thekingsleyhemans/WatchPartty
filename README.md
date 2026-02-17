@@ -10,7 +10,7 @@ WatchParrty V1 is a minimal watch party app for YouTube + Netflix. YouTube sync 
 4. Copy `.env.example` to `.env.local` and fill:
    - `NEXT_PUBLIC_SUPABASE_URL`
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-   - `NEXT_PUBLIC_APP_URL` (for local: `http://localhost:3000`)
+   - `NEXT_PUBLIC_APP_URL` (for local: `https://watch-partty.vercel.app`)
 
 ## 2) Run web app locally
 
@@ -19,7 +19,7 @@ npm install
 npm run dev
 ```
 
-Open `http://localhost:3000`.
+Open `https://watch-partty.vercel.app`.
 
 ## 3) Load extension unpacked
 

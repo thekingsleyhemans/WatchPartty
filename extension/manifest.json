@@ -6,7 +6,7 @@
   "permissions": ["storage"],
   "host_permissions": [
     "https://www.netflix.com/*",
-    "http://localhost:3000/*",
+    "https://watch-partty.vercel.app/*",
     "https://*.vercel.app/*",
     "https://*.supabase.co/*"
   ],
@@ -21,6 +21,6 @@
     }
   ],
   "externally_connectable": {
-    "matches": ["http://localhost/*", "https://localhost/*", "https://*.vercel.app/*"]
+    "matches": ["https://watch-partty.vercel.app/*", "https://*.vercel.app/*"]
   }
 }
