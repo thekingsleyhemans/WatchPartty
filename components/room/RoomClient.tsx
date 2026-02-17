@@ -7,6 +7,7 @@ import { extractYouTubeVideoId } from "@/lib/sync/youtube";
 import YouTubeSyncPlayer from "@/components/youtube/YouTubeSyncPlayer";
 
 type PresenceState = Record<string, Array<{ user_id: string }>>;
+type UserProfileRow = { user_id: string; username: string };
 
 export default function RoomClient({ initialRoom, currentUserId }: { initialRoom: Room; currentUserId: string }) {
   const supabase = useMemo(() => createBrowserSupabaseClient(), []);
@@ -18,6 +19,7 @@ export default function RoomClient({ initialRoom, currentUserId }: { initialRoom
   const [latestEvent, setLatestEvent] = useState<SyncEvent | null>(null);
   const [extensionConnected, setExtensionConnected] = useState(false);
   const [inviteStatus, setInviteStatus] = useState("");
+  const [usernames, setUsernames] = useState<Record<string, string>>({});
   const syncChannelRef = useRef<ReturnType<typeof supabase.channel> | null>(null);
 
   const roomUrl = typeof window !== "undefined" ? `${window.location.origin}/room/${initialRoom.id}` : "";
@@ -31,6 +33,22 @@ export default function RoomClient({ initialRoom, currentUserId }: { initialRoom
     const list = (memberRows as RoomMember[]) ?? [];
     setMembers(list);
     setMessages((messageRows as RoomMessage[]) ?? []);
+
+    const memberIds = list.map((m) => m.user_id);
+    if (memberIds.length) {
+      const { data: profileRows } = await supabase
+        .from("user_profiles")
+        .select("user_id,username")
+        .in("user_id", memberIds);
+
+      const profileMap: Record<string, string> = {};
+      ((profileRows as UserProfileRow[] | null) ?? []).forEach((profile) => {
+        profileMap[profile.user_id] = profile.username;
+      });
+      setUsernames(profileMap);
+    } else {
+      setUsernames({});
+    }
 
     const me = list.find((m) => m.user_id === currentUserId);
     setMyRole(me?.role ?? "viewer");
@@ -197,6 +215,7 @@ export default function RoomClient({ initialRoom, currentUserId }: { initialRoom
     window.open(initialRoom.source, "_blank");
   };
 
+  const displayName = (userId: string) => usernames[userId] || userId.slice(0, 8);
   const hostId = members.find((m) => m.role === "host")?.user_id;
   const youtubeVideoId = initialRoom.platform === "youtube" ? extractYouTubeVideoId(initialRoom.source) || initialRoom.source : "";
 
@@ -209,7 +228,7 @@ export default function RoomClient({ initialRoom, currentUserId }: { initialRoom
             <p className="text-sm text-slate-500">Platform: {initialRoom.platform.toUpperCase()}</p>
           </div>
           <div className="flex gap-2">
-            <button className="border border-slate-300 bg-white" onClick={shareInvite}>
+            <button className="btn btn-outline" onClick={shareInvite}>
               Share Invite Link
             </button>
           </div>
@@ -231,7 +250,7 @@ export default function RoomClient({ initialRoom, currentUserId }: { initialRoom
               Netflix sync runs through the WatchParrty Chrome extension. Keep netflix.com open in another tab with the extension installed.
             </p>
             <p>Extension status: {extensionConnected ? "Connected" : "Not connected"}</p>
-            <button className="w-fit bg-slate-900 text-white" onClick={openNetflixWithExtension}>
+            <button className="btn btn-primary w-fit" onClick={openNetflixWithExtension}>
               Open in Netflix
             </button>
           </div>
@@ -242,20 +261,20 @@ export default function RoomClient({ initialRoom, currentUserId }: { initialRoom
         <section className="rounded-2xl border border-slate-200 bg-white p-4">
           <div className="mb-2 flex items-center justify-between">
             <h2 className="font-semibold">Participants ({presenceUsers.length || members.length})</h2>
-            {myRole !== "host" ? <button className="border border-slate-300 bg-white text-sm">Request host</button> : null}
+            {myRole !== "host" ? <button className="btn btn-outline text-sm">Request host</button> : null}
           </div>
           <ul className="grid gap-2 text-sm">
             {members.map((m) => (
               <li key={m.user_id} className="flex items-center justify-between rounded-lg border border-slate-200 px-2 py-1.5">
                 <span>
-                  {m.user_id.slice(0, 8)}
+                  {displayName(m.user_id)}
                   {m.user_id === currentUserId ? " (you)" : ""}
                   {presenceUsers.includes(m.user_id) ? " - online" : ""}
                 </span>
                 <div className="flex items-center gap-2">
                   {m.role === "host" ? <span className="rounded-md bg-slate-900 px-2 py-0.5 text-xs text-white">Host</span> : null}
                   {myRole === "host" && m.user_id !== currentUserId ? (
-                    <button className="border border-slate-300 bg-white px-2 py-1 text-xs" onClick={() => transferHost(m.user_id)}>
+                    <button className="btn btn-outline px-2 py-1 text-xs" onClick={() => transferHost(m.user_id)}>
                       Make host
                     </button>
                   ) : null}
@@ -263,7 +282,7 @@ export default function RoomClient({ initialRoom, currentUserId }: { initialRoom
               </li>
             ))}
           </ul>
-          {hostId ? <p className="mt-2 text-xs text-slate-500">Current host: {hostId.slice(0, 8)}</p> : null}
+          {hostId ? <p className="mt-2 text-xs text-slate-500">Current host: {displayName(hostId)}</p> : null}
         </section>
 
         <section className="rounded-2xl border border-slate-200 bg-white p-4">
@@ -271,7 +290,7 @@ export default function RoomClient({ initialRoom, currentUserId }: { initialRoom
           <div className="max-h-64 space-y-2 overflow-auto rounded-lg border border-slate-200 bg-slate-50 p-2 text-sm">
             {messages.map((message) => (
               <p key={`${message.id}-${message.created_at}`}>
-                <span className="font-medium">{message.user_id.slice(0, 6)}:</span> {message.content}
+                <span className="font-medium">{displayName(message.user_id)}:</span> {message.content}
               </p>
             ))}
             {!messages.length ? <p className="text-slate-500">No messages yet.</p> : null}
@@ -283,7 +302,7 @@ export default function RoomClient({ initialRoom, currentUserId }: { initialRoom
               value={chatInput}
               onChange={(e) => setChatInput(e.target.value)}
             />
-            <button className="bg-slate-900 text-white" type="submit">
+            <button className="btn btn-primary" type="submit">
               Send
             </button>
           </form>

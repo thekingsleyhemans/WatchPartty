@@ -25,9 +25,16 @@ create table if not exists public.messages (
   created_at timestamptz not null default now()
 );
 
+create table if not exists public.user_profiles (
+  user_id uuid primary key references auth.users(id) on delete cascade,
+  username text not null,
+  updated_at timestamptz not null default now()
+);
+
 alter table public.rooms enable row level security;
 alter table public.room_members enable row level security;
 alter table public.messages enable row level security;
+alter table public.user_profiles enable row level security;
 
 create policy if not exists "read rooms"
 on public.rooms for select
@@ -60,6 +67,18 @@ using (auth.role() = 'authenticated');
 create policy if not exists "insert own messages"
 on public.messages for insert
 with check (auth.uid() = user_id);
+
+create policy if not exists "read profiles"
+on public.user_profiles for select
+using (auth.role() = 'authenticated');
+
+create policy if not exists "insert own profile"
+on public.user_profiles for insert
+with check (auth.uid() = user_id);
+
+create policy if not exists "update own profile"
+on public.user_profiles for update
+using (auth.uid() = user_id);
 
 alter publication supabase_realtime add table public.room_members;
 alter publication supabase_realtime add table public.messages;

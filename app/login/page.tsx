@@ -42,8 +42,13 @@ export default function LoginPage() {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
+        <div className="text-right">
+          <Link className="text-sm text-accent" href="/forgot-password">
+            Forgot password?
+          </Link>
+        </div>
         {error ? <p className="text-sm text-red-600">{error}</p> : null}
-        <button type="submit" disabled={loading} className="bg-slate-900 text-white disabled:opacity-70">
+        <button type="submit" disabled={loading} className="btn btn-primary disabled:opacity-70">
           {loading ? "Logging in..." : "Log in"}
         </button>
       </form>
